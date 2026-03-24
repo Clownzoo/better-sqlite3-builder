@@ -1,0 +1,157 @@
+name: Build better-sqlite3 Binaries
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  NODE_VERSION: 22.17.0
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  build-macos:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: darwin-arm64
+            runs_on: macos-14
+          - target: darwin-x64
+            runs_on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Show toolchain
+        run: |
+          node --version
+          npm --version
+          python3 --version
+          xcode-select -p
+      - name: Build target
+        run: node scripts/build-target.mjs ${{ matrix.target }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          if-no-files-found: error
+          path: |
+            dist/${{ matrix.target }}/better_sqlite3.node
+            dist/manifest.json
+
+  build-linux:
+    name: Build linux-x64
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install build and Electron runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            ca-certificates \
+            libasound2 \
+            libatk-bridge2.0-0 \
+            libatk1.0-0 \
+            libc6 \
+            libcairo2 \
+            libcups2 \
+            libdbus-1-3 \
+            libdrm2 \
+            libexpat1 \
+            libgbm1 \
+            libglib2.0-0 \
+            libgtk-3-0 \
+            libnspr4 \
+            libnss3 \
+            libpango-1.0-0 \
+            libx11-6 \
+            libx11-xcb1 \
+            libxcb1 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxext6 \
+            libxfixes3 \
+            libxkbcommon0 \
+            libxrandr2 \
+            make \
+            python3 \
+            xdg-utils
+      - name: Show toolchain
+        run: |
+          uname -a
+          node --version
+          npm --version
+          python3 --version
+          gcc --version
+      - name: Build target
+        run: node scripts/build-target.mjs linux-x64
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64
+          if-no-files-found: error
+          path: |
+            dist/linux-x64/better_sqlite3.node
+            dist/manifest.json
+
+  build-windows:
+    name: Build ${{ matrix.target }}
+    runs-on: windows-2022
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - win32-ia32
+          - win32-x64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Configure MSVC for node-gyp
+        shell: pwsh
+        run: |
+          npm config set msvs_version 2022
+          echo "GYP_MSVS_VERSION=2022" >> $env:GITHUB_ENV
+      - name: Show toolchain
+        shell: pwsh
+        run: |
+          node --version
+          npm --version
+          python --version
+      - name: Build target
+        run: node scripts/build-target.mjs ${{ matrix.target }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          if-no-files-found: error
+          path: |
+            dist/${{ matrix.target }}/better_sqlite3.node
+            dist/manifest.json

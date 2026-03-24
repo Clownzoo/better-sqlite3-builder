@@ -1,0 +1,29 @@
+{
+  "name": "better-sqlite3-electron-builder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Build better-sqlite3.node binaries for Electron across macOS, Linux, and Windows targets.",
+  "type": "module",
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build:mac:arm64": "node scripts/build-target.mjs darwin-arm64",
+    "build:mac:x64": "node scripts/build-target.mjs darwin-x64",
+    "build:linux:x64": "node scripts/build-linux-docker.mjs",
+    "build:win:ia32": "node scripts/build-target.mjs win32-ia32",
+    "build:win:x64": "node scripts/build-target.mjs win32-x64",
+    "build:all-local": "node scripts/run-many.mjs darwin-arm64 darwin-x64 linux-x64",
+    "build:all": "node scripts/run-many.mjs darwin-arm64 darwin-x64 linux-x64 win32-ia32 win32-x64"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "buildConfig": {
+    "moduleName": "better_sqlite3.node",
+    "modulePackage": "better-sqlite3",
+    "versions": {
+      "betterSqlite3": "12.6.0",
+      "electron": "35.2.1",
+      "electronRebuild": "3.7.2"
+    }
+  }
+}
