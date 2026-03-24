@@ -68,10 +68,15 @@ jobs:
       - name: Install build and Electron runtime dependencies
         run: |
           sudo apt-get update
+          if apt-cache show libasound2t64 >/dev/null 2>&1; then
+            ALSA_PKG=libasound2t64
+          else
+            ALSA_PKG=libasound2
+          fi
           sudo apt-get install -y --no-install-recommends \
             build-essential \
             ca-certificates \
-            libasound2 \
+            "$ALSA_PKG" \
             libatk-bridge2.0-0 \
             libatk1.0-0 \
             libc6 \
