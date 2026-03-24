@@ -200,10 +200,11 @@ async function updateManifest(targetInfo) {
 function run(command, args, options) {
   return new Promise((resolve, reject) => {
     const resolvedCommand = resolveCommand(command);
-    const child = spawn(resolvedCommand, args, {
-      ...options,
-      stdio: "inherit"
-    });
+    const child = spawn(
+      resolvedCommand,
+      args,
+      buildSpawnOptions(resolvedCommand, options)
+    );
 
     child.on("exit", (code) => {
       if (code === 0) {
@@ -224,4 +225,13 @@ function resolveCommand(command) {
   }
 
   return command;
+}
+
+function buildSpawnOptions(command, options) {
+  return {
+    ...options,
+    shell: process.platform === "win32" && command.endsWith(".cmd"),
+    stdio: "inherit",
+    windowsHide: true
+  };
 }
