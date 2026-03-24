@@ -199,7 +199,8 @@ async function updateManifest(targetInfo) {
 
 function run(command, args, options) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, {
+    const resolvedCommand = resolveCommand(command);
+    const child = spawn(resolvedCommand, args, {
       ...options,
       stdio: "inherit"
     });
@@ -215,4 +216,12 @@ function run(command, args, options) {
 
     child.on("error", reject);
   });
+}
+
+function resolveCommand(command) {
+  if (process.platform === "win32" && command === "npm") {
+    return "npm.cmd";
+  }
+
+  return command;
 }
