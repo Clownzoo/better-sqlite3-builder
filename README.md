@@ -10,7 +10,7 @@
 - `win32-ia32`
 - `win32-x64`
 
-默认锁定版本：
+锁定版本：
 
 - `better-sqlite3@12.6.0`
 - `electron@35.2.1`
