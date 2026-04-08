@@ -70,6 +70,10 @@ jobs:
           docker --version
       - name: Build target
         run: node scripts/build-linux-docker.mjs
+      - name: Check linux binary glibc symbols
+        run: |
+          ldd --version
+          strings dist/linux-x64/better_sqlite3.node | grep GLIBC_ | sort -u || true
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:

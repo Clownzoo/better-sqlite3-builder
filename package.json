@@ -22,7 +22,7 @@
     "modulePackage": "better-sqlite3",
     "linuxBaseline": {
       "dockerImage": "node:22-bookworm",
-      "glibc": "2.28"
+      "glibc": "2.36"
     },
     "versions": {
       "betterSqlite3": "12.6.0",
