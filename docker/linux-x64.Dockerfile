@@ -1,4 +1,5 @@
-FROM node:22-bookworm
+ARG NODE_IMAGE=node:22-bullseye
+FROM ${NODE_IMAGE}
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \

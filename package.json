@@ -21,8 +21,8 @@
     "moduleName": "better_sqlite3.node",
     "modulePackage": "better-sqlite3",
     "linuxBaseline": {
-      "dockerImage": "node:22-bookworm",
-      "glibc": "2.36"
+      "dockerImage": "node:22-bullseye",
+      "glibc": "2.31"
     },
     "versions": {
       "betterSqlite3": "12.6.0",

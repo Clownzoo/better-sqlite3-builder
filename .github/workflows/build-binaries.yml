@@ -73,7 +73,7 @@ jobs:
       - name: Check linux binary glibc symbols
         run: |
           ldd --version
-          strings dist/linux-x64/better_sqlite3.node | grep GLIBC_ | sort -u || true
+          node scripts/check-linux-glibc.mjs dist/linux-x64/better_sqlite3.node
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:

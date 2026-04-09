@@ -24,6 +24,6 @@
 
 ## Linux 构建说明
 
-- `linux-x64` 目标在 Docker 内构建，当前基线镜像为 `node:22-bookworm`
-- 该镜像对应较新的 glibc（约 2.36），与 Ubuntu 22.04+ 支持范围一致
-- CI 会在构建后输出 `better_sqlite3.node` 的 `GLIBC_*` 符号，便于兼容性排查
+- `linux-x64` 目标在 Docker 内构建，当前基线镜像为 `node:22-bullseye`
+- 该镜像的 glibc 基线约为 `2.31`，低于 Ubuntu 22.04 的 `2.35`，因此不会因为 glibc 过新而丢失对 Ubuntu 22.04+ 的兼容性
+- CI 会在构建后校验 `better_sqlite3.node` 的 `GLIBC_*` 符号上限，超出基线时直接失败
