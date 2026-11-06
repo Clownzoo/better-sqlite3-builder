@@ -1,10 +1,17 @@
-ARG NODE_IMAGE=node:22-bullseye
-FROM ${NODE_IMAGE}
+ARG BASE_IMAGE=ubuntu:22.04
+FROM node:22.17.0-bullseye AS node
+FROM ${BASE_IMAGE}
+
+COPY --from=node /usr/local/ /usr/local/
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    CC=clang-14 \
+    CXX=clang++-14
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     ca-certificates \
-    g++ \
+    clang-14 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \

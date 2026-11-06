@@ -9,7 +9,7 @@ const rootPackageJson = JSON.parse(
   await readFile(path.join(repoRoot, "package.json"), "utf8")
 );
 const dockerBaseImage =
-  rootPackageJson.buildConfig?.linuxBaseline?.dockerImage ?? "node:22-bullseye";
+  rootPackageJson.buildConfig?.linuxBaseline?.dockerImage ?? "ubuntu:22.04";
 const imageTag = "better-sqlite3-electron-builder-linux-x64";
 const dockerPlatform = "linux/amd64";
 const dockerHome = "/workspace/.work/docker-home";
@@ -27,7 +27,7 @@ await run(
     "--platform",
     dockerPlatform,
     "--build-arg",
-    `NODE_IMAGE=${dockerBaseImage}`,
+    `BASE_IMAGE=${dockerBaseImage}`,
     "-t",
     imageTag,
     "-f",
