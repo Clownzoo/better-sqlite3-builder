@@ -12,14 +12,14 @@
 
 锁定版本：
 
-- `better-sqlite3@12.6.0`
-- `electron@35.2.1`
+- `better-sqlite3@12.11.1`
+- `electron@43.8.6`
 - `@electron/rebuild@3.7.2`
 
 ## 平台支持基线
 
 - Windows: 10 及以上
-- macOS: 11 (Big Sur) 及以上
+- macOS: 12 (Monterey) 及以上
 - Linux: Ubuntu Desktop 22.04 及以上
 
 ## Linux 构建说明

@@ -131,15 +131,16 @@ await run(
 
 if (!skipSmoke) {
   console.log(`Running Electron smoke test for ${target}...`);
+  const smokeArgs = [smokeScriptPath, installedElectronVersion, installedModuleVersion, targetConfig.arch];
   const smokeRun =
     process.platform === "darwin" && process.arch === "arm64" && targetConfig.arch === "x64"
       ? {
           command: "arch",
-          args: ["-x86_64", "npm", "exec", "electron", "--", smokeScriptPath]
+          args: ["-x86_64", "npm", "exec", "electron", "--", ...smokeArgs]
         }
       : {
           command: "npm",
-          args: ["exec", "electron", "--", smokeScriptPath]
+          args: ["exec", "electron", "--", ...smokeArgs]
         };
 
   await run(smokeRun.command, smokeRun.args, {
