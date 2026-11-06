@@ -25,7 +25,7 @@
 ## Linux 构建说明
 
 - `linux-x64` 目标在 `ubuntu:22.04` Docker 镜像内构建并运行 Electron 验证，glibc 基线为 `2.35`
-- 构建使用官方 Node.js 22.17.0 镜像中的 Node/npm，以及 Ubuntu 自带的 Clang 14 工具链
+- 构建使用官方 Node.js 22.17.0 镜像中的 Node/npm，以及 LLVM 官方 Jammy 软件源提供的 Clang 22，以支持 Electron 43 头文件使用的 C++20 接口
 - CI 会在构建后校验 `better_sqlite3.node` 的 `GLIBC_*` 符号上限，超出基线时直接失败
 
 ## 构建验证

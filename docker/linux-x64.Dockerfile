@@ -5,13 +5,13 @@ FROM ${BASE_IMAGE}
 COPY --from=node /usr/local/ /usr/local/
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    CC=clang-14 \
-    CXX=clang++-14
+    CC=clang-22 \
+    CXX=clang++-22
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     ca-certificates \
-    clang-14 \
+    curl \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -39,6 +39,16 @@ RUN apt-get update \
     python3 \
     make \
     xdg-utils \
+  && rm -rf /var/lib/apt/lists/*
+
+# Electron 43 的 V8 头文件需要支持 std::source_location 的编译器。
+# 使用 LLVM 为 Jammy 构建的软件包，保留 Ubuntu 22.04 的运行库基线。
+RUN curl --fail --show-error --silent --location \
+      https://apt.llvm.org/llvm-snapshot.gpg.key \
+      --output /usr/share/keyrings/llvm.asc \
+  && echo 'deb [signed-by=/usr/share/keyrings/llvm.asc] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-22 main' > /etc/apt/sources.list.d/llvm.list \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends clang-22 \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
